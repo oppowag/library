@@ -5,12 +5,16 @@
 	<link rel = "stylesheet" href = "styles.css">
 </head>
 <body>
+	<div style = "text-align: center; margin: 10px;"><button id = "addBook">New Book</button></div>
+	
 	<table>
 		<tr>
 			<th>Title</th>
 			<th>Author</th>
 			<th>Number of pages</th>
 			<th>Read</th>
+			<th>Delete</th>
+			<th>Read status</th>
 		</tr>
 	</table>
 
@@ -25,7 +29,12 @@
 		}
 
 		function addBookToLibrary(){
+			myLibrary.push(new Book(prompt("Title"), prompt("Author"), prompt("Number of pages"), prompt("Read (yes / no)")));
+			render();
 
+			// Add eventListeners to newly created buttons
+			document.getElementsByClassName("delete")[0].addEventListener("click",function(){console.log("success");});
+			document.getElementsByClassName("read")[0].addEventListener("click",function(){console.log("success");});
 		}
 
 		function render(){
@@ -40,12 +49,20 @@
 				for(j = 0; j < bookKeys.length; j++){
 					bookRow.insertCell(j).innerHTML = myLibrary[i][bookKeys[j]];
 				}
+				// Add delete column + button
+				var deleteBtn = document.createElement("button");
+				deleteBtn.innerHTML = "Delete";
+				deleteBtn.classList = "delete";
+				bookRow.insertCell(bookKeys.length).appendChild(deleteBtn);
+				// Add read column + button
+				var readBtn = document.createElement("button");
+				readBtn.innerHTML = "Modify";
+				readBtn.classList = "read";
+				bookRow.insertCell(bookKeys.length + 1).appendChild(readBtn);
 			}
 		}
 
-		const testObj = new Book("test title", "test author", "233 pages", "read");
-		myLibrary.push(testObj);
-		render();
+		document.getElementById("addBook").addEventListener("click", addBookToLibrary);
 
 	</script>
 
