@@ -6,17 +6,8 @@
 </head>
 <body>
 	<div style = "text-align: center; margin: 10px;"><button id = "addBook">New Book</button></div>
-	
-	<table>
-		<tr>
-			<th>Title</th>
-			<th>Author</th>
-			<th>Number of pages</th>
-			<th>Read</th>
-			<th>Delete</th>
-			<th>Read status</th>
-		</tr>
-	</table>
+
+	<div id = "main"></div>
 
 	<script>
 		let myLibrary = [];
@@ -28,20 +19,50 @@
 			this.read = read;
 		}
 
+		Book.prototype.readStatus = function(){
+			if(this.read.toUpperCase() == "NO"){
+				this.read = "Yes";
+			}
+
+			else{
+				this.read = "No";
+			}
+		}
+
+		function removeFromLibrary(index){
+			myLibrary.splice(index, 1);
+			render();
+		}
+
 		function addBookToLibrary(){
 			myLibrary.push(new Book(prompt("Title"), prompt("Author"), prompt("Number of pages"), prompt("Read (yes / no)")));
 			render();
-
-			// Add eventListeners to newly created buttons
-			document.getElementsByClassName("delete")[0].addEventListener("click",function(){console.log("success");});
-			document.getElementsByClassName("read")[0].addEventListener("click",function(){console.log("success");});
 		}
 
 		function render(){
-			// Select the table to modify
-			var table = document.getElementsByTagName("table")[0];
+			// Remove existing table if it exists
+			var mainDiv = document.getElementById("main");
+			mainDiv.innerHTML = "";
+
+			// Create the table to modify
+			var table = document.createElement("table");
+
+			// Create title row
+			var titleRow = table.insertRow();
+			titleRow.classList.add("titleRow");
+			titleRow.insertCell(0).innerHTML = "Title";
+			titleRow.insertCell(1).innerHTML = "Author";
+			titleRow.insertCell(2).innerHTML = "Number of pages";
+			titleRow.insertCell(3).innerHTML = "Read";
+			titleRow.insertCell(4).innerHTML = "Delete";
+			titleRow.insertCell(5).innerHTML = "Read status";
+
+			// Append to created table to page
+			mainDiv.appendChild(table);
+
 			// Go through array of all books and print each on a new row
 			for(i = 0; i < myLibrary.length; i++){
+
 				// Create a new row
 				var bookRow = table.insertRow();
 				// Fill in attributes of the book in the table in the new row
@@ -52,12 +73,19 @@
 				// Add delete column + button
 				var deleteBtn = document.createElement("button");
 				deleteBtn.innerHTML = "Delete";
-				deleteBtn.classList = "delete";
+				deleteBtn.setAttribute("data-index", i);
+				deleteBtn.addEventListener("click",function(){
+					removeFromLibrary(this.dataset.index);
+				});
 				bookRow.insertCell(bookKeys.length).appendChild(deleteBtn);
 				// Add read column + button
 				var readBtn = document.createElement("button");
 				readBtn.innerHTML = "Modify";
-				readBtn.classList = "read";
+				readBtn.setAttribute("data-index", i);
+				readBtn.addEventListener("click", function(){
+					myLibrary[this.dataset.index].readStatus();
+					render();
+				});
 				bookRow.insertCell(bookKeys.length + 1).appendChild(readBtn);
 			}
 		}
