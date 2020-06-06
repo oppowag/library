@@ -12,21 +12,23 @@
 	<script>
 		let myLibrary = [];
 
-		function Book(title, author, pages, read){
-			this.title = title;
-			this.author = author;
-			this.pages = pages;
-			this.read = read;
-		}
-
-		Book.prototype.readStatus = function(){
-			if(this.read.toUpperCase() == "NO"){
-				this.read = "Yes";
+		class Book{
+			constructor(title, author, pages, read){
+				this.title = title;
+				this.author = author;
+				this.pages = pages;
+				this.read = read;
 			}
 
-			else{
-				this.read = "No";
-			}
+			readStatus(){
+				if(this.read.toUpperCase() == "NO"){
+					this.read = "Yes";
+				}
+
+				else{
+					this.read = "No";
+				}
+			}					
 		}
 
 		function removeFromLibrary(index){
